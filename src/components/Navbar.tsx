@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Building2, 
   ChevronDown, 
@@ -15,6 +16,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { BUSINESS_INFO, buildWhatsAppLink } from '../data/businessInfo';
+import { MagneticWrapper } from './MotionWrappers';
 
 interface NavbarProps {
   currentPath: string;
@@ -57,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
 
   return (
     <>
-      {/* Top verified bar */}
+      {/* Top verified announcement bar */}
       <div className="bg-brand-navy text-white text-xs py-2 px-4 border-b border-brand-navyLight">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -65,9 +67,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
               href={BUSINESS_INFO.rating.googleProfileUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:text-brand-ice transition-colors"
+              className="inline-flex items-center gap-1.5 hover:text-brand-ice transition-colors group"
             >
-              <div className="flex text-amber-400">
+              <div className="flex text-amber-400 group-hover:scale-105 transition-transform">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                 ))}
@@ -89,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
               href={BUSINESS_INFO.phone.telLink}
               className="inline-flex items-center gap-1.5 text-white hover:text-brand-ice transition-colors font-semibold"
             >
-              <Phone className="w-3.5 h-3.5 text-brand-orange" />
+              <Phone className="w-3.5 h-3.5 text-brand-orange animate-pulse" />
               <span>{BUSINESS_INFO.phone.display}</span>
             </a>
           </div>
@@ -111,12 +113,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
             onClick={(e) => handleLinkClick('/', e)}
             className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue rounded-lg p-1"
           >
-            <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center text-white shadow-electric group-hover:scale-105 transition-transform duration-300">
+            <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center text-white shadow-electric group-hover:scale-105 group-hover:shadow-luxury-hover transition-all duration-300">
               <Building2 className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-heading font-extrabold text-xl tracking-tight text-brand-navy">
+                <span className="font-heading font-extrabold text-xl tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors">
                   S B Real Estate
                 </span>
                 <span className="w-2 h-2 rounded-full bg-brand-orange"></span>
@@ -132,9 +134,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
             <a
               href="/"
               onClick={(e) => handleLinkClick('/', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 currentPath === '/'
-                  ? 'text-brand-blue bg-brand-ice/40'
+                  ? 'text-brand-blue bg-brand-ice/50 font-bold'
                   : 'text-brand-navy hover:text-brand-blue hover:bg-gray-50'
               }`}
             >
@@ -144,9 +146,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
             <a
               href="/about"
               onClick={(e) => handleLinkClick('/about', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 currentPath === '/about'
-                  ? 'text-brand-blue bg-brand-ice/40'
+                  ? 'text-brand-blue bg-brand-ice/50 font-bold'
                   : 'text-brand-navy hover:text-brand-blue hover:bg-gray-50'
               }`}
             >
@@ -160,94 +162,106 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
                 onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
                 onMouseEnter={() => setServicesDropdownOpen(true)}
                 aria-expanded={servicesDropdownOpen}
-                className={`px-3 py-2 rounded-lg text-sm font-semibold inline-flex items-center gap-1.5 transition-colors ${
+                className={`px-3.5 py-2 rounded-lg text-sm font-semibold inline-flex items-center gap-1.5 transition-all ${
                   isServicesActive
-                    ? 'text-brand-blue bg-brand-ice/40'
+                    ? 'text-brand-blue bg-brand-ice/50 font-bold'
                     : 'text-brand-navy hover:text-brand-blue hover:bg-gray-50'
                 }`}
               >
                 <span>Services</span>
                 <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200 ${
+                  className={`w-4 h-4 transition-transform duration-300 ${
                     servicesDropdownOpen ? 'rotate-180 text-brand-blue' : 'text-gray-400'
                   }`}
                 />
               </button>
 
-              {servicesDropdownOpen && (
-                <div
-                  onMouseLeave={() => setServicesDropdownOpen(false)}
-                  className="absolute left-0 mt-1 w-64 rounded-2xl bg-white border border-brand-ice shadow-luxury-hover p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                >
-                  <a
-                    href="/flat-rentals"
-                    onClick={(e) => handleLinkClick('/flat-rentals', e)}
-                    className={`flex items-start gap-3 p-3 rounded-xl transition-all ${
-                      currentPath === '/flat-rentals'
-                        ? 'bg-brand-ice/50 text-brand-blue'
-                        : 'hover:bg-brand-iceLight text-brand-navy'
-                    }`}
+              <AnimatePresence>
+                {servicesDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    onMouseLeave={() => setServicesDropdownOpen(false)}
+                    className="absolute left-0 mt-2 w-72 rounded-2xl bg-white border border-brand-ice shadow-luxury-hover p-2 z-50 backdrop-blur-xl"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5">
-                      <Building className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="font-heading font-bold text-sm">Flat Rentals</div>
-                      <p className="text-xs text-brand-navyMuted mt-0.5">
-                        Apartments tailored to personal requirements
-                      </p>
-                    </div>
-                  </a>
+                    <a
+                      href="/flat-rentals"
+                      onClick={(e) => handleLinkClick('/flat-rentals', e)}
+                      className={`flex items-start gap-3.5 p-3 rounded-xl transition-all group ${
+                        currentPath === '/flat-rentals'
+                          ? 'bg-brand-ice/60 text-brand-blue'
+                          : 'hover:bg-brand-iceLight text-brand-navy'
+                      }`}
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5 group-hover:scale-110 transition-transform">
+                        <Building className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-heading font-bold text-sm group-hover:text-brand-blue transition-colors">
+                          Flat Rentals
+                        </div>
+                        <p className="text-xs text-brand-navyMuted mt-0.5 leading-snug">
+                          Apartments tailored to personal requirements
+                        </p>
+                      </div>
+                    </a>
 
-                  <a
-                    href="/home-rentals"
-                    onClick={(e) => handleLinkClick('/home-rentals', e)}
-                    className={`flex items-start gap-3 p-3 rounded-xl transition-all ${
-                      currentPath === '/home-rentals'
-                        ? 'bg-brand-ice/50 text-brand-blue'
-                        : 'hover:bg-brand-iceLight text-brand-navy'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5">
-                      <HomeIcon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="font-heading font-bold text-sm">Home Rentals</div>
-                      <p className="text-xs text-brand-navyMuted mt-0.5">
-                        Independent houses for families & professionals
-                      </p>
-                    </div>
-                  </a>
+                    <a
+                      href="/home-rentals"
+                      onClick={(e) => handleLinkClick('/home-rentals', e)}
+                      className={`flex items-start gap-3.5 p-3 rounded-xl transition-all group ${
+                        currentPath === '/home-rentals'
+                          ? 'bg-brand-ice/60 text-brand-blue'
+                          : 'hover:bg-brand-iceLight text-brand-navy'
+                      }`}
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5 group-hover:scale-110 transition-transform">
+                        <HomeIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-heading font-bold text-sm group-hover:text-brand-blue transition-colors">
+                          Home Rentals
+                        </div>
+                        <p className="text-xs text-brand-navyMuted mt-0.5 leading-snug">
+                          Independent houses for families & professionals
+                        </p>
+                      </div>
+                    </a>
 
-                  <a
-                    href="/rental-agreements"
-                    onClick={(e) => handleLinkClick('/rental-agreements', e)}
-                    className={`flex items-start gap-3 p-3 rounded-xl transition-all ${
-                      currentPath === '/rental-agreements'
-                        ? 'bg-brand-ice/50 text-brand-blue'
-                        : 'hover:bg-brand-iceLight text-brand-navy'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5">
-                      <FileText className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="font-heading font-bold text-sm">Rental Agreements</div>
-                      <p className="text-xs text-brand-navyMuted mt-0.5">
-                        Straightforward documentation assistance
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              )}
+                    <a
+                      href="/rental-agreements"
+                      onClick={(e) => handleLinkClick('/rental-agreements', e)}
+                      className={`flex items-start gap-3.5 p-3 rounded-xl transition-all group ${
+                        currentPath === '/rental-agreements'
+                          ? 'bg-brand-ice/60 text-brand-blue'
+                          : 'hover:bg-brand-iceLight text-brand-navy'
+                      }`}
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-brand-ice flex items-center justify-center text-brand-blue mt-0.5 group-hover:scale-110 transition-transform">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-heading font-bold text-sm group-hover:text-brand-blue transition-colors">
+                          Rental Agreements
+                        </div>
+                        <p className="text-xs text-brand-navyMuted mt-0.5 leading-snug">
+                          Straightforward documentation assistance
+                        </p>
+                      </div>
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <a
               href="/reviews"
               onClick={(e) => handleLinkClick('/reviews', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 currentPath === '/reviews'
-                  ? 'text-brand-blue bg-brand-ice/40'
+                  ? 'text-brand-blue bg-brand-ice/50 font-bold'
                   : 'text-brand-navy hover:text-brand-blue hover:bg-gray-50'
               }`}
             >
@@ -257,9 +271,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
             <a
               href="/contact"
               onClick={(e) => handleLinkClick('/contact', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 currentPath === '/contact'
-                  ? 'text-brand-blue bg-brand-ice/40'
+                  ? 'text-brand-blue bg-brand-ice/50 font-bold'
                   : 'text-brand-navy hover:text-brand-blue hover:bg-gray-50'
               }`}
             >
@@ -269,25 +283,29 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
 
           {/* Desktop Right CTAs */}
           <div className="hidden lg:flex items-center gap-3">
-            <a
-              href={BUSINESS_INFO.phone.telLink}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-brand-navy font-semibold text-sm hover:text-brand-blue hover:bg-brand-ice/40 transition-colors"
-            >
-              <Phone className="w-4 h-4 text-brand-blue" />
-              <span>Call Now</span>
-            </a>
+            <MagneticWrapper strength={15}>
+              <a
+                href={BUSINESS_INFO.phone.telLink}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-brand-navy font-semibold text-sm hover:text-brand-blue hover:bg-brand-ice/40 transition-colors"
+              >
+                <Phone className="w-4 h-4 text-brand-blue" />
+                <span>Call Now</span>
+              </a>
+            </MagneticWrapper>
 
-            <a
-              href={buildWhatsAppLink(
-                "Hello S B Real Estate, I am looking for rental assistance in Bengaluru. Could you please share how we can proceed?"
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-heading font-bold text-sm shadow-orange-glow hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <MessageCircle className="w-4 h-4 fill-white/20" />
-              <span>WhatsApp Us</span>
-            </a>
+            <MagneticWrapper strength={15}>
+              <a
+                href={buildWhatsAppLink(
+                  "Hello S B Real Estate, I am looking for rental assistance in Bengaluru. Could you please share how we can proceed?"
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shimmer-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-heading font-bold text-sm shadow-orange-glow hover:shadow-lg transition-all"
+              >
+                <MessageCircle className="w-4 h-4 fill-white/20" />
+                <span>WhatsApp Us</span>
+              </a>
+            </MagneticWrapper>
           </div>
 
           {/* Mobile Menu Button */}
@@ -296,7 +314,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
               href={buildWhatsAppLink("Hello S B Real Estate, I would like to enquire about residential rentals.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-brand-orange text-white shadow-orange-glow"
+              className="p-2.5 rounded-xl bg-brand-orange text-white shadow-orange-glow active:scale-95 transition-transform"
               aria-label="WhatsApp S B Real Estate"
             >
               <MessageCircle className="w-5 h-5 fill-white/20" />
@@ -305,7 +323,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-brand-navy hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              className="p-2.5 rounded-xl text-brand-navy hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -315,199 +333,210 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
         </div>
       </header>
 
-      {/* Mobile Drawer Navigation */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+      {/* Mobile Drawer Navigation with Motion */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
 
-          {/* Drawer content */}
-          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
-            <div>
-              {/* Drawer header */}
-              <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center text-white">
-                    <Building2 className="w-4 h-4" />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
+            >
+              <div>
+                {/* Drawer header */}
+                <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center text-white">
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <span className="font-heading font-bold text-brand-navy">S B Real Estate</span>
                   </div>
-                  <span className="font-heading font-bold text-brand-navy">S B Real Estate</span>
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-1 rounded-lg text-gray-500 hover:bg-gray-100"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+
+                {/* Verified rating in mobile */}
+                <div className="mt-4 p-3.5 rounded-xl bg-brand-ice/50 border border-brand-blue/20">
+                  <div className="flex items-center gap-2">
+                    <div className="flex text-amber-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                      ))}
+                    </div>
+                    <span className="font-bold text-xs text-brand-navy">
+                      {BUSINESS_INFO.rating.score} / 5.0
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-brand-navyMuted mt-1">
+                    Based on {BUSINESS_INFO.rating.reviewCount} verified Google reviews
+                  </p>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="mt-6 space-y-1">
+                  <a
+                    href="/"
+                    onClick={(e) => handleLinkClick('/', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm transition-colors ${
+                      currentPath === '/'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <HomeIcon className="w-4 h-4" />
+                      <span>Home</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <a
+                    href="/about"
+                    onClick={(e) => handleLinkClick('/about', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm transition-colors ${
+                      currentPath === '/about'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Info className="w-4 h-4" />
+                      <span>About Us</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <div className="pt-2 pb-1 px-3 text-xs font-bold uppercase tracking-wider text-brand-navyMuted">
+                    Services
+                  </div>
+
+                  <a
+                    href="/flat-rentals"
+                    onClick={(e) => handleLinkClick('/flat-rentals', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 transition-colors ${
+                      currentPath === '/flat-rentals'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Building className="w-4 h-4" />
+                      <span>Flat Rentals</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <a
+                    href="/home-rentals"
+                    onClick={(e) => handleLinkClick('/home-rentals', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 transition-colors ${
+                      currentPath === '/home-rentals'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <HomeIcon className="w-4 h-4" />
+                      <span>Home Rentals</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <a
+                    href="/rental-agreements"
+                    onClick={(e) => handleLinkClick('/rental-agreements', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 transition-colors ${
+                      currentPath === '/rental-agreements'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-4 h-4" />
+                      <span>Rental Agreements</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <div className="pt-2"></div>
+
+                  <a
+                    href="/reviews"
+                    onClick={(e) => handleLinkClick('/reviews', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm transition-colors ${
+                      currentPath === '/reviews'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Customer Reviews</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+
+                  <a
+                    href="/contact"
+                    onClick={(e) => handleLinkClick('/contact', e)}
+                    className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm transition-colors ${
+                      currentPath === '/contact'
+                        ? 'bg-brand-blue text-white shadow-electric'
+                        : 'text-brand-navy hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-4 h-4" />
+                      <span>Contact</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 opacity-70" />
+                  </a>
+                </nav>
               </div>
 
-              {/* Verified rating in mobile */}
-              <div className="mt-4 p-3 rounded-xl bg-brand-ice/50 border border-brand-blue/20">
-                <div className="flex items-center gap-2">
-                  <div className="flex text-amber-500">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                    ))}
-                  </div>
-                  <span className="font-bold text-xs text-brand-navy">
-                    {BUSINESS_INFO.rating.score} / 5.0
-                  </span>
-                </div>
-                <p className="text-[11px] text-brand-navyMuted mt-1">
-                  Based on {BUSINESS_INFO.rating.reviewCount} verified Google reviews
-                </p>
+              {/* Mobile drawer actions */}
+              <div className="pt-6 border-t border-gray-100 space-y-3">
+                <a
+                  href={BUSINESS_INFO.phone.telLink}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-ice text-brand-navy font-heading font-bold text-sm hover:bg-brand-ice/80 active:scale-95 transition-all"
+                >
+                  <Phone className="w-4 h-4 text-brand-blue" />
+                  <span>Call {BUSINESS_INFO.phone.display}</span>
+                </a>
+
+                <a
+                  href={buildWhatsAppLink(
+                    "Hello S B Real Estate, I am looking for rental assistance in Bengaluru. Could you please assist me?"
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shimmer-btn w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-brand-orange text-white font-heading font-bold text-sm shadow-orange-glow active:scale-95 transition-all"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white/20" />
+                  <span>Chat on WhatsApp</span>
+                </a>
               </div>
-
-              {/* Navigation Links */}
-              <nav className="mt-6 space-y-1">
-                <a
-                  href="/"
-                  onClick={(e) => handleLinkClick('/', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ${
-                    currentPath === '/'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <HomeIcon className="w-4 h-4" />
-                    <span>Home</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <a
-                  href="/about"
-                  onClick={(e) => handleLinkClick('/about', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ${
-                    currentPath === '/about'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Info className="w-4 h-4" />
-                    <span>About Us</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <div className="pt-2 pb-1 px-3 text-xs font-bold uppercase tracking-wider text-brand-navyMuted">
-                  Services
-                </div>
-
-                <a
-                  href="/flat-rentals"
-                  onClick={(e) => handleLinkClick('/flat-rentals', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 ${
-                    currentPath === '/flat-rentals'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Building className="w-4 h-4" />
-                    <span>Flat Rentals</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <a
-                  href="/home-rentals"
-                  onClick={(e) => handleLinkClick('/home-rentals', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 ${
-                    currentPath === '/home-rentals'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <HomeIcon className="w-4 h-4" />
-                    <span>Home Rentals</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <a
-                  href="/rental-agreements"
-                  onClick={(e) => handleLinkClick('/rental-agreements', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ml-2 ${
-                    currentPath === '/rental-agreements'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-4 h-4" />
-                    <span>Rental Agreements</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <div className="pt-2"></div>
-
-                <a
-                  href="/reviews"
-                  onClick={(e) => handleLinkClick('/reviews', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ${
-                    currentPath === '/reviews'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Customer Reviews</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-
-                <a
-                  href="/contact"
-                  onClick={(e) => handleLinkClick('/contact', e)}
-                  className={`flex items-center justify-between p-3 rounded-xl font-semibold text-sm ${
-                    currentPath === '/contact'
-                      ? 'bg-brand-blue text-white'
-                      : 'text-brand-navy hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4" />
-                    <span>Contact</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
-                </a>
-              </nav>
-            </div>
-
-            {/* Mobile drawer actions */}
-            <div className="pt-6 border-t border-gray-100 space-y-3">
-              <a
-                href={BUSINESS_INFO.phone.telLink}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-ice text-brand-navy font-heading font-bold text-sm hover:bg-brand-ice/80 transition-colors"
-              >
-                <Phone className="w-4 h-4 text-brand-blue" />
-                <span>Call {BUSINESS_INFO.phone.display}</span>
-              </a>
-
-              <a
-                href={buildWhatsAppLink(
-                  "Hello S B Real Estate, I am looking for rental assistance in Bengaluru. Could you please assist me?"
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-orange text-white font-heading font-bold text-sm shadow-orange-glow hover:bg-brand-orangeHover transition-colors"
-              >
-                <MessageCircle className="w-4 h-4 fill-white/20" />
-                <span>Chat on WhatsApp</span>
-              </a>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 };
-

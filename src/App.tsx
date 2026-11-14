@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ROUTES, RouteMeta } from './data/routes';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -110,9 +111,16 @@ export const App: React.FC<AppProps> = ({ initialPath }) => {
       {/* Global Header */}
       <Navbar currentPath={currentPath} onNavigate={navigateTo} />
 
-      {/* Main Page Body */}
+      {/* Main Page Body with Silky Smooth Page Transition */}
       <main className="flex-1 pb-16 md:pb-0" id="main-content">
-        {renderPageComponent()}
+        <motion.div
+          key={currentPath}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {renderPageComponent()}
+        </motion.div>
       </main>
 
       {/* Global Footer */}
@@ -125,4 +133,3 @@ export const App: React.FC<AppProps> = ({ initialPath }) => {
 };
 
 export default App;
-

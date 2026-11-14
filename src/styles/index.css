@@ -45,20 +45,57 @@
   background: #1B44BF;
 }
 
-/* Luxury card and glass subtle utilities */
+/* Ambient glow & backdrop utilities */
+.ambient-glow-blue {
+  background: radial-gradient(circle at 50% 50%, rgba(36, 85, 232, 0.12) 0%, rgba(36, 85, 232, 0) 70%);
+}
+
+.ambient-glow-orange {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 113, 56, 0.12) 0%, rgba(255, 113, 56, 0) 70%);
+}
+
+/* Luxury card & hover states */
 .luxury-card {
   background: #FFFFFF;
-  border: 1px solid rgba(220, 230, 255, 0.7);
+  border: 1px solid rgba(220, 230, 255, 0.8);
   box-shadow: 0 10px 30px -10px rgba(21, 35, 74, 0.05);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .luxury-card:hover {
-  border-color: rgba(36, 85, 232, 0.3);
-  box-shadow: 0 20px 45px -12px rgba(36, 85, 232, 0.12);
-  transform: translateY(-2px);
+  border-color: rgba(36, 85, 232, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(36, 85, 232, 0.15);
+  transform: translateY(-4px);
 }
 
+/* Shimmer button highlight */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shimmer-btn:hover::after {
+  transform: translateX(100%);
+}
+
+/* Text Gradients */
 .electric-gradient-text {
   background: linear-gradient(135deg, #2455E8 0%, #15234A 100%);
   -webkit-background-clip: text;
@@ -71,13 +108,52 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Floating animation keyframes */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatGentle 5s ease-in-out 1.5s infinite;
+}
+
+/* Pulse ring */
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+.pulse-ring {
+  animation: pulseRing 3s ease-in-out infinite;
+}
+
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }
-
